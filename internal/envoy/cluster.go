@@ -82,7 +82,7 @@ func cluster(cluster *dag.Cluster, service *dag.TCPService) *v2.Cluster {
 		AltStatName:          altStatName(service),
 		ClusterDiscoveryType: ClusterDiscoveryType(v2.Cluster_EDS),
 		EdsClusterConfig:     edsconfig("contour", service),
-		ConnectTimeout:       250 * time.Millisecond,
+		ConnectTimeout:       10 * time.Second,
 		LbPolicy:             lbPolicy(service.LoadBalancerStrategy),
 		CommonLbConfig:       ClusterCommonLBConfig(),
 		HealthChecks:         edshealthcheck(service),

@@ -143,7 +143,7 @@ static_resources:
                       pass_through_mode: false
                       headers:
                       - name: ":path"
-                        exact_match: "/healthz"
+                        exact_match: "/ping"
                   - name: envoy.router
                     config:
 {{ if .StatsdEnabled }}stats_sinks:

@@ -75,7 +75,7 @@ func Bootstrap(c *BootstrapConfig) *bootstrap.Bootstrap {
 												"headers": lv(
 													st(map[string]*types.Value{
 														"name":        sv(":path"),
-														"exact_match": sv("/healthz"),
+														"exact_match": sv("/ping"),
 													}),
 												),
 											}),
