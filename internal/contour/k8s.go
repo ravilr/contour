@@ -110,7 +110,7 @@ func (reh *ResourceEventHandler) update() {
 // validIngressClass returns true iff:
 //
 // 1. obj is not of type *v1beta1.Ingress or ingressroutev1.IngressRoute.
-// 2. obj has no ingress.class annotation.
+// 2. obj has no ingress.class annotation in IngressRoute.
 // 2. obj's ingress.class annotation matches d.IngressClass.
 func (reh *ResourceEventHandler) validIngressClass(obj interface{}) bool {
 	switch i := obj.(type) {
@@ -118,8 +118,8 @@ func (reh *ResourceEventHandler) validIngressClass(obj interface{}) bool {
 		class, ok := getIngressClassAnnotation(i.Annotations)
 		return !ok || class == reh.ingressClass()
 	case *v1beta1.Ingress:
-		class, ok := getIngressClassAnnotation(i.Annotations)
-		return !ok || class == reh.ingressClass()
+		class, _ := getIngressClassAnnotation(i.Annotations)
+		return class == reh.ingressClass()
 	default:
 		return true
 	}
