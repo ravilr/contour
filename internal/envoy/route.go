@@ -92,6 +92,14 @@ func retryPolicy(r *dag.Route) *route.RetryPolicy {
 		timeout := r.RetryPolicy.PerTryTimeout
 		rp.PerTryTimeout = &timeout
 	}
+
+	rp.RetryHostPredicate = append(rp.RetryHostPredicate,
+		&route.RetryPolicy_RetryHostPredicate{
+			Name: "envoy.retry_host_predicates.previous_hosts",
+		},
+	)
+	rp.HostSelectionRetryMaxAttempts = 3
+
 	return rp
 }
 

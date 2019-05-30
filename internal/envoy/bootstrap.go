@@ -106,6 +106,13 @@ func Bootstrap(c *BootstrapConfig) *bootstrap.Bootstrap {
 					}},
 				},
 				Http2ProtocolOptions: new(core.Http2ProtocolOptions), // enables http2
+				UpstreamConnectionOptions: &api.UpstreamConnectionOptions{
+					TcpKeepalive: &core.TcpKeepalive{
+						KeepaliveInterval: u32(10),
+						KeepaliveTime:     u32(60),
+						KeepaliveProbes:   u32(6),
+					},
+				},
 				CircuitBreakers: &clusterv2.CircuitBreakers{
 					Thresholds: []*clusterv2.CircuitBreakers_Thresholds{{
 						Priority:           core.RoutingPriority_HIGH,

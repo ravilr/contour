@@ -191,11 +191,26 @@ func accesslog(path string) *types.Value {
 	return lv(
 		st(map[string]*types.Value{
 			"name": sv(util.FileAccessLog),
+			"filter": accesslogFilter(),
 			"config": st(map[string]*types.Value{
 				"path": sv(path),
 			}),
 		}),
 	)
+}
+
+func accesslogFilter() *types.Value {
+	return st(map[string]*types.Value{
+		"status_code_filter": st(map[string]*types.Value{
+			"comparison": st(map[string]*types.Value{
+				"op": sv("GE"),
+				"value": st(map[string]*types.Value{
+					"default_value": nv(float64(400)),
+					"runtime_key": sv("access_log.access_error.status"),
+				}),
+			}),
+		}),
+	})
 }
 
 func sv(s string) *types.Value {

@@ -86,6 +86,13 @@ func cluster(cluster *dag.Cluster, service *dag.TCPService) *v2.Cluster {
 		LbPolicy:             lbPolicy(service.LoadBalancerStrategy),
 		CommonLbConfig:       ClusterCommonLBConfig(),
 		HealthChecks:         edshealthcheck(service),
+		UpstreamConnectionOptions: &v2.UpstreamConnectionOptions{
+			TcpKeepalive: &core.TcpKeepalive{
+				KeepaliveInterval: u32(10),
+				KeepaliveTime:     u32(60),
+				KeepaliveProbes:   u32(6),
+			},
+		},
 	}
 
 	// Drain connections immediately if using healthchecks and the endpoint is known to be removed
@@ -96,6 +103,13 @@ func cluster(cluster *dag.Cluster, service *dag.TCPService) *v2.Cluster {
 	if anyPositive(service.MaxConnections, service.MaxPendingRequests, service.MaxRequests, service.MaxRetries) {
 		c.CircuitBreakers = &envoy_cluster.CircuitBreakers{
 			Thresholds: []*envoy_cluster.CircuitBreakers_Thresholds{{
+				Priority:           core.RoutingPriority_HIGH,
+				MaxConnections:     u32nil(service.MaxConnections),
+				MaxPendingRequests: u32nil(service.MaxPendingRequests),
+				MaxRequests:        u32nil(service.MaxRequests),
+				MaxRetries:         u32nil(service.MaxRetries),
+			}, {
+				Priority:           core.RoutingPriority_DEFAULT,
 				MaxConnections:     u32nil(service.MaxConnections),
 				MaxPendingRequests: u32nil(service.MaxPendingRequests),
 				MaxRequests:        u32nil(service.MaxRequests),
