@@ -104,6 +104,7 @@ func HTTPConnectionManager(routename, accessLogPath string) listener.Filter {
 					"use_remote_address": {Kind: &types.Value_BoolValue{BoolValue: true}}, // TODO(jbeda) should this ever be false?
 					"normalize_path":     {Kind: &types.Value_BoolValue{BoolValue: true}},
 					"idle_timeout":       sv("180s"),
+					"generate_request_id": {Kind: &types.Value_BoolValue{BoolValue: false}},
 				},
 			},
 		},
