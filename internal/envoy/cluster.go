@@ -81,10 +81,17 @@ func cluster(cluster *dag.Cluster, service *dag.TCPService) *v2.Cluster {
 	c := &v2.Cluster{
 		Name:           Clustername(cluster),
 		AltStatName:    altStatName(service),
-		ConnectTimeout: 250 * time.Millisecond,
+		ConnectTimeout: 10 * time.Second,
 		LbPolicy:       lbPolicy(cluster.LoadBalancerStrategy),
 		CommonLbConfig: ClusterCommonLBConfig(),
 		HealthChecks:   edshealthcheck(cluster),
+		UpstreamConnectionOptions: &v2.UpstreamConnectionOptions{
+			TcpKeepalive: &core.TcpKeepalive{
+				KeepaliveInterval: u32(10),
+				KeepaliveTime:     u32(60),
+				KeepaliveProbes:   u32(6),
+			},
+		},
 	}
 
 	switch len(service.ExternalName) {
@@ -106,6 +113,13 @@ func cluster(cluster *dag.Cluster, service *dag.TCPService) *v2.Cluster {
 	if anyPositive(service.MaxConnections, service.MaxPendingRequests, service.MaxRequests, service.MaxRetries) {
 		c.CircuitBreakers = &envoy_cluster.CircuitBreakers{
 			Thresholds: []*envoy_cluster.CircuitBreakers_Thresholds{{
+				Priority:           core.RoutingPriority_HIGH,
+				MaxConnections:     u32nil(service.MaxConnections),
+				MaxPendingRequests: u32nil(service.MaxPendingRequests),
+				MaxRequests:        u32nil(service.MaxRequests),
+				MaxRetries:         u32nil(service.MaxRetries),
+			}, {
+				Priority:           core.RoutingPriority_DEFAULT,
 				MaxConnections:     u32nil(service.MaxConnections),
 				MaxPendingRequests: u32nil(service.MaxPendingRequests),
 				MaxRequests:        u32nil(service.MaxRequests),

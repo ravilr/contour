@@ -33,7 +33,7 @@ import (
 // wasting resources, without stopping slow connections from being terminated
 // too quickly.
 // Exported so the same value can be used here and in e2e tests.
-const HTTPDefaultIdleTimeout = 60 * time.Second
+const HTTPDefaultIdleTimeout = 180 * time.Second
 
 // TCPDefaultIdleTimeout sets the idle timeout in seconds for
 // connections through a TCP Proxy type filter.
@@ -122,6 +122,7 @@ func HTTPConnectionManager(routename, accessLogPath string) listener.Filter {
 				UseRemoteAddress: &types.BoolValue{Value: true}, // TODO(jbeda) should this ever be false?
 				NormalizePath:    &types.BoolValue{Value: true},
 				IdleTimeout:      idleTimeout(HTTPDefaultIdleTimeout),
+				GenerateRequestId: &types.BoolValue{Value: false},
 			}),
 		},
 	}

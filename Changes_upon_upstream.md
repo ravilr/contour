@@ -1,0 +1,11 @@
+- do not generate(and override) x-request-id header. revert this when envoyproxy/envoy#6050 lands in envoy-v1.11.0 release,
+   which does the right thing of being able to configure it to be generated, only when not present.
+- Configure retry host predicate to skip already tried endpoints from being retries
+- Configure tcp keepalive options to tear down half open connections for both grpc management server and upstream clusters
+- Configure access log filter to log only failed requests
+- Circuit breaker settings for both high and default priorities
+- base image change for contour image due to missing sleep command
+- changed hardcoded http listener idle_timeout from 60s to 180s
+- changed hardcoded cluster connect_timeout from 250ms to 10s
+- changed envoy.health_check check monitor path from /healthz to /ping
+- changed to program & serve only ingresses with ingress class set to contour

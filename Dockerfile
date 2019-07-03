@@ -10,5 +10,5 @@ COPY internal internal
 COPY apis apis
 RUN CGO_ENABLED=0 GOOS=linux GOFLAGS=-ldflags=-w go build -o /go/bin/contour -ldflags=-s -v github.com/heptio/contour/cmd/contour
 
-FROM scratch AS final
+FROM ubuntu:16.04 AS final
 COPY --from=build /go/bin/contour /bin/contour

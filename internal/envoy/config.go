@@ -82,6 +82,11 @@ static_resources:
         port_value: {{ if .XDSGRPCPort }}{{ .XDSGRPCPort }}{{ else }}8001{{ end }}
     lb_policy: ROUND_ROBIN
     http2_protocol_options: {}
+    upstream_connection_options:
+      tcp_keepalive:
+        keepalive_probes: 6
+        keepalive_time: 60
+        keepalive_interval: 10
     circuit_breakers:
       thresholds:
         - priority: high
@@ -131,7 +136,7 @@ static_resources:
                       pass_through_mode: false
                       headers:
                       - name: ":path"
-                        exact_match: "/healthz"
+                        exact_match: "/ping"
                   - name: envoy.router
                     config:
 admin:

@@ -65,7 +65,7 @@ func StatsListener(address string, port int) *v2.Listener {
 									Headers: []*route.HeaderMatcher{{
 										Name: ":path",
 										HeaderMatchSpecifier: &route.HeaderMatcher_ExactMatch{
-											ExactMatch: "/healthz",
+											ExactMatch: "/ping",
 										},
 									}},
 								}),
